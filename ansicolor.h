@@ -1,5 +1,5 @@
 /*
- * About this program: highlight version 1.0; colorize text on terminals
+ * About this program: highlight version 1.1; colorize text on terminals
  * Copyright (C) 2012 Michal Kosek
  * 
  * This program is free software: you can redistribute it and/or modify

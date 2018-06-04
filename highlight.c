@@ -1,5 +1,5 @@
 /*
- * About this program: highlight version 1.0; colorize text on terminals
+ * About this program: highlight version 1.1; colorize text on terminals
  * Copyright (C) 2012 Michal Kosek
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@
 static int INPUT_BUFFER_SIZE = (16*1024);
 static int SEQUENCE_STRING_LENGTH = 20;
 
-static char* highlight_version="Highlight version 1.0";
+static char* highlight_version="Highlight version 1.1";
 static char* highlight_copyright="Copyright (c) 2012 Michal Kosek.";
 
 /* ************************************************************************** */
@@ -250,23 +250,34 @@ main(int argc, char** argv)
   {
     strcat(start_sequence_string, "\033[");
     strcat(end_sequence_string, "\033[0m");
-  }
-  if(options.attr_set_flag)
-  {
-    strcat(start_sequence_string, attr_sequence[options.attr_index]);
-    strcat(start_sequence_string, (options.fg_set_flag || options.bg_set_flag)
-	    ? ";" : "");
-  }
-  if(options.fg_set_flag)
-  {
-    strcat(start_sequence_string, fg_sequence[options.fg_index]);
-    strcat(start_sequence_string,(options.bg_set_flag) ? ";" : "");
-  }
-  if(options.bg_set_flag)
-    strcat(start_sequence_string, bg_sequence[options.bg_index]);
 
-  if(options.attr_set_flag || options.fg_set_flag || options.bg_set_flag)
+    if(options.attr_set_flag)
+    {
+      strcat(start_sequence_string, attr_sequence[options.attr_index]);
+      strcat(start_sequence_string, (options.fg_set_flag || options.bg_set_flag)
+	    ? ";" : "");
+    }
+    if(options.fg_set_flag)
+    {
+      strcat(start_sequence_string, fg_sequence[options.fg_index]);
+      strcat(start_sequence_string,(options.bg_set_flag) ? ";" : "");
+    }
+    if(options.bg_set_flag)
+      strcat(start_sequence_string, bg_sequence[options.bg_index]);
+
+    if(options.attr_set_flag || options.fg_set_flag || options.bg_set_flag)
+      strcat(start_sequence_string, "m");
+  }
+  else
+  {
+    /* default highlighting */
+    strcat(start_sequence_string, "\033[");
+    strcat(start_sequence_string, fg_sequence[7]);
+    strcat(start_sequence_string, ";");
+    strcat(start_sequence_string, bg_sequence[1]);
     strcat(start_sequence_string, "m");
+    strcat(end_sequence_string, "\033[0m");
+  }
 
   /* open input file if filename is specified  */
   if (options.filename_set_flag)
@@ -279,6 +290,10 @@ main(int argc, char** argv)
       return retval.value_error;
     }
   }
+
+  /* set line buffering mode for input and output stream */
+  setvbuf(input, NULL, _IOLBF, INPUT_BUFFER_SIZE);
+  setvbuf(output, NULL, _IOLBF, INPUT_BUFFER_SIZE);
 
   /* compile regular expression  */
   if(options.extended_regex_flag)
