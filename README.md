@@ -3,11 +3,6 @@ This package contains highlight version 1.1.
 Highlight is a command line filter to highlight given pattern 
 on ANSI compatible terminals using colors.
 
-Contacts:
-
-  Author: Michal Kosek
-  E-mail: <mkmk@email.cz>
-
 Prerequisities:
   gcc, make
 
